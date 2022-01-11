@@ -1,0 +1,45 @@
+name: Workflow Run Action
+on:
+  workflow_run:
+    workflows:
+      - Main Action
+    types:
+      - requested
+      - completed
+
+jobs:
+  # On Requested
+  on-requested:
+    name: On Requested
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == '' }}
+    steps:
+      - name: Call Hello World
+        uses: docker://alpine:latest
+        with:
+          entrypoint: /bin/echo
+          args: Hello, World From On Requested!
+
+  # On Success(completed)
+  on-success:
+    name: On Success
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: Call Hello World
+        uses: docker://alpine:latest
+        with:
+          entrypoint: /bin/echo
+          args: Hello, World From On Success!
+
+  # On Failure(completed)
+  on-failure:
+    name: On Failure
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+    steps:
+      - name: Call Hello World
+        uses: docker://alpine:latest
+        with:
+          entrypoint: /bin/echo
+          args: Hello, World From On Failure!
